@@ -1,0 +1,66 @@
+/* ==========================================================================
+   PLYNET RESPONSIVE & ACCESSIBILITY STYLESHEET
+   Supports Android 10+ Phones, Tablets, Foldables
+   ========================================================================== */
+
+/* Minimum touch targets for accessibility (48px) */
+button, 
+.icon-btn, 
+.nav-tab-btn, 
+.post-action-btn, 
+.call-action-btn,
+.feed-tab {
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+/* Tablet & Large Screens (Expanded Window Class) */
+@media (min-width: 601px) {
+  body {
+    background-color: #030712;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #app-container {
+    height: 94vh;
+    border-radius: 28px;
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+  }
+
+  .bottom-nav-bar {
+    border-radius: 0 0 28px 28px;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .top-bar {
+    padding: 6px 16px;
+  }
+
+  .screen-view {
+    padding-bottom: 60px;
+  }
+
+  .bottom-nav-bar {
+    height: 48px;
+  }
+
+  .local-video-pip {
+    width: 80px;
+    height: 110px;
+  }
+}
+
+/* High contrast & reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

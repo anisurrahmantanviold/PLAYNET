@@ -1,0 +1,6 @@
+{
+  "name": "PLYNET",
+  "description": "Connect. Share. Belong. Complete social and community network app with feeds, communities, real-time messaging, WebRTC voice and video calling, and AI assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

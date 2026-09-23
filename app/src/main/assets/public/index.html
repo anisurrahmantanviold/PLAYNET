@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>PLYNET — Connect. Share. Belong.</title>
+
+  <!-- Theme and Style sheets -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div id="app-container">
+
+    <!-- Offline Banner -->
+    <div id="offline-banner" style="display:none;background:#EF4444;color:#fff;text-align:center;font-size:0.75rem;font-weight:700;padding:4px 8px;z-index:99;">
+      📡 You are offline. Showing cached PLYNET data.
+    </div>
+
+    <!-- Top App Bar -->
+    <header class="top-bar">
+      <div class="brand-logo-wrap" id="brand-logo-btn">
+        <div class="brand-badge">P</div>
+        <div style="display:flex;flex-direction:column;">
+          <span class="brand-title">PLYNET</span>
+          <span style="font-size:0.65rem;color:var(--text-tertiary);font-weight:600;letter-spacing:0.2px;margin-top:-3px;">Connect. Share. Belong.</span>
+        </div>
+      </div>
+
+      <div class="top-bar-actions">
+        <button class="icon-btn ai-sparkle-btn" id="top-ai-btn" aria-label="PLYNET AI" title="PLYNET AI Assistant">
+          ✨
+        </button>
+
+        <button class="icon-btn" id="top-notif-btn" aria-label="Notifications">
+          🔔
+          <span class="badge" id="header-unread-badge" style="display:none;">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Viewport containing screen views -->
+    <main class="screen-viewport">
+
+      <!-- SCREEN 1: HOME FEED -->
+      <section class="screen-view active" id="screen-feed">
+        <!-- Feed Navigation Tabs -->
+        <div class="feed-tabs-row">
+          <button class="feed-tab active" data-tab="for_you">For You</button>
+          <button class="feed-tab" data-tab="following">Following</button>
+          <button class="feed-tab" data-tab="communities">Communities</button>
+        </div>
+
+        <!-- Stories / Community Highlights Reel -->
+        <div class="stories-container" id="stories-container">
+          <!-- Populated by feed.js -->
+        </div>
+
+        <!-- Posts Stream -->
+        <div class="feed-stream" id="feed-stream">
+          <!-- Populated by feed.js -->
+        </div>
+      </section>
+
+      <!-- SCREEN 2: SEARCH & EXPLORE -->
+      <section class="screen-view" id="screen-search">
+        <div style="padding:12px 16px 6px 16px;background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);">
+          <div style="display:flex;align-items:center;background:var(--bg-input);border-radius:var(--radius-full);padding:0 14px;border:1px solid var(--border-subtle);">
+            <span style="font-size:1rem;color:var(--text-tertiary);margin-right:8px;">🔍</span>
+            <input type="text" id="search-input-field" placeholder="Search people, posts, #tags, communities..." style="flex:1;background:transparent;border:none;outline:none;padding:10px 0;font-size:0.92rem;color:var(--text-primary);">
+          </div>
+
+          <div style="display:flex;gap:12px;margin-top:10px;overflow-x:auto;">
+            <button class="feed-tab search-nav-tab active" data-tab="all" style="padding:6px 0;font-size:0.82rem;">All</button>
+            <button class="feed-tab search-nav-tab" data-tab="people" style="padding:6px 0;font-size:0.82rem;">People</button>
+            <button class="feed-tab search-nav-tab" data-tab="communities" style="padding:6px 0;font-size:0.82rem;">Communities</button>
+            <button class="feed-tab search-nav-tab" data-tab="posts" style="padding:6px 0;font-size:0.82rem;">Posts</button>
+          </div>
+        </div>
+
+        <div id="search-recent-section" style="padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span style="font-size:0.82rem;font-weight:700;color:var(--text-tertiary);">RECENT SEARCHES</span>
+            <span style="font-size:0.75rem;color:var(--primary-500);cursor:pointer;font-weight:600;" onclick="window.PlynetSearch.clearAllRecent()">Clear all</span>
+          </div>
+          <div id="search-recent-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
+
+          <div style="font-size:0.82rem;font-weight:700;color:var(--text-tertiary);margin-bottom:10px;">TRENDING ON PLYNET</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <button class="ai-chip-btn" onclick="window.PlynetSearch.applySearchTerm('#webrtc')">🔥 #webrtc</button>
+            <button class="ai-chip-btn" onclick="window.PlynetSearch.applySearchTerm('#design')">🎨 #design</button>
+            <button class="ai-chip-btn" onclick="window.PlynetSearch.applySearchTerm('#community')">👥 #community</button>
+            <button class="ai-chip-btn" onclick="window.PlynetSearch.applySearchTerm('#android')">📱 #android</button>
+            <button class="ai-chip-btn" onclick="window.PlynetSearch.applySearchTerm('Elena')">✨ Elena Rostova</button>
+          </div>
+        </div>
+
+        <div id="search-results-container" style="padding:0 16px;"></div>
+      </section>
+
+      <!-- SCREEN 3: COMMUNITIES -->
+      <section class="screen-view" id="screen-communities">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);">
+          <div>
+            <div style="font-size:1.1rem;font-weight:800;color:var(--text-primary);">Communities</div>
+            <div style="font-size:0.75rem;color:var(--text-tertiary);">Find spaces where you belong</div>
+          </div>
+          <button class="btn-primary" style="width:auto;padding:8px 16px;font-size:0.82rem;border-radius:999px;" onclick="window.PlynetCommunities.openCreateCommunityModal()">
+            + New Community
+          </button>
+        </div>
+        <div class="communities-grid" id="communities-grid-container"></div>
+      </section>
+
+      <!-- SCREEN 4: MESSAGING LIST -->
+      <section class="screen-view" id="screen-messages">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);">
+          <div>
+            <div style="font-size:1.15rem;font-weight:800;color:var(--text-primary);">Messages</div>
+            <div style="font-size:0.75rem;color:var(--accent-emerald);font-weight:600;">🟢 WebRTC Calling Ready</div>
+          </div>
+          <button class="icon-btn" onclick="window.PlynetApp.switchScreen('search')" aria-label="New Message">✏️</button>
+        </div>
+        <div class="chats-list" id="chats-threads-list"></div>
+      </section>
+
+      <!-- SCREEN 5: CHAT ROOM VIEW -->
+      <section class="screen-view" id="screen-chat_room" style="padding-bottom:0;">
+        <div class="chat-room-container">
+          <div class="chat-room-header">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <button class="icon-btn" style="background:transparent;font-size:1.2rem;" onclick="window.PlynetApp.switchScreen('messages')">←</button>
+              <img id="chat-room-avatar" class="chat-header-avatar" src="" alt="Partner">
+              <div>
+                <div id="chat-room-name" style="font-weight:700;font-size:0.95rem;color:var(--text-primary);">Member</div>
+                <div class="chat-header-status" id="chat-room-status">Online</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:6px;">
+              <button class="icon-btn" id="chat-room-voice-call" title="Start WebRTC Voice Call" style="color:var(--accent-emerald);">📞</button>
+              <button class="icon-btn" id="chat-room-video-call" title="Start WebRTC Video Call" style="color:var(--primary-500);">🎥</button>
+            </div>
+          </div>
+
+          <div id="chat-typing-indicator" style="display:none;padding:4px 18px;font-size:0.75rem;color:var(--text-tertiary);font-style:italic;">
+            Typing...
+          </div>
+
+          <div class="chat-messages-scroll" id="chat-messages-container"></div>
+
+          <div class="chat-input-bar">
+            <button class="icon-btn" style="background:transparent;" onclick="window.PlynetApp.showToast('Select photo/media')">📎</button>
+            <input type="text" id="chat-text-input" class="chat-text-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter') window.PlynetMessaging.sendMessage()">
+            <button class="icon-btn" id="chat-mic-btn" onclick="window.PlynetMessaging.toggleVoiceRecord()" title="Hold or tap to send voice note">🎙️</button>
+            <button class="icon-btn" style="background:var(--primary-500);color:#fff;" onclick="window.PlynetMessaging.sendMessage()">➔</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 6: NOTIFICATIONS -->
+      <section class="screen-view" id="screen-notifications">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);">
+          <span style="font-size:1.1rem;font-weight:800;color:var(--text-primary);">Notifications</span>
+          <span style="font-size:0.78rem;color:var(--primary-500);cursor:pointer;font-weight:600;" onclick="window.PlynetNotifications.markAllRead()">Mark all as read</span>
+        </div>
+        <div id="notifications-list"></div>
+      </section>
+
+      <!-- SCREEN 7: USER PROFILE -->
+      <section class="screen-view" id="screen-profile">
+        <div class="profile-cover">
+          <img id="profile-cover-img" class="profile-cover-img" src="" alt="Cover">
+        </div>
+
+        <div class="profile-avatar-row">
+          <img id="profile-main-avatar" class="profile-main-avatar" src="" alt="Profile">
+          <div id="profile-action-buttons" style="display:flex;gap:8px;margin-bottom:8px;"></div>
+        </div>
+
+        <div style="padding:10px 16px 4px 16px;">
+          <div id="profile-name" style="font-size:1.3rem;font-weight:800;color:var(--text-primary);">Member</div>
+          <div id="profile-handle" style="font-size:0.85rem;color:var(--text-tertiary);margin-bottom:8px;">@handle</div>
+          <p id="profile-bio" style="font-size:0.92rem;color:var(--text-secondary);line-height:1.45;"></p>
+        </div>
+
+        <div class="profile-stats-bar">
+          <div class="stat-box">
+            <span class="stat-value" id="profile-stat-posts">0</span>
+            <span class="stat-label">Posts</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-value" id="profile-stat-followers">0</span>
+            <span class="stat-label">Followers</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-value" id="profile-stat-following">0</span>
+            <span class="stat-label">Following</span>
+          </div>
+        </div>
+
+        <div class="feed-tabs-row" style="position:static;">
+          <button class="feed-tab profile-nav-tab active" data-tab="posts">Posts</button>
+          <button class="feed-tab profile-nav-tab" data-tab="media">Media</button>
+          <button class="feed-tab profile-nav-tab" data-tab="saved">Saved</button>
+        </div>
+
+        <div id="profile-tab-content"></div>
+      </section>
+
+      <!-- SCREEN 8: SETTINGS -->
+      <section class="screen-view" id="screen-settings">
+        <div style="padding:14px 16px;background:var(--bg-surface);border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;gap:10px;">
+          <button class="icon-btn" style="background:transparent;" onclick="window.PlynetApp.switchScreen('profile')">←</button>
+          <span style="font-size:1.15rem;font-weight:800;">Settings</span>
+        </div>
+
+        <div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px;">
+          <!-- Premium Banner -->
+          <div class="post-card" style="background:linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);color:#fff;padding:16px;border:none;cursor:pointer;" onclick="window.PlynetSettings.openPremiumModal()">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-weight:800;font-size:1.05rem;color:#FBBF24;">★ PLYNET Premium</div>
+                <div style="font-size:0.8rem;opacity:0.85;margin-top:2px;">Ad-free, golden badge & 1080p WebRTC calls</div>
+              </div>
+              <button class="btn-primary" style="width:auto;background:#F59E0B;padding:6px 14px;font-size:0.8rem;border-radius:999px;">Upgrade</button>
+            </div>
+          </div>
+
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text-tertiary);margin-top:6px;">PREFERENCES</div>
+
+          <div class="chat-thread-item" onclick="window.PlynetSettings.openThemeModal()">
+            <span style="font-size:1.2rem;">🎨</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:0.92rem;">Appearance & Themes</div>
+              <div style="font-size:0.75rem;color:var(--text-tertiary);">Light, Onyx Dark, or Midnight Luxe</div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="chat-thread-item" onclick="window.PlynetSettings.openFirebaseConfigModal()">
+            <span style="font-size:1.2rem;">🔥</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:0.92rem;">Firebase Cloud Setup</div>
+              <div style="font-size:0.75rem;color:var(--text-tertiary);">Manage project keys & cloud endpoints</div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="chat-thread-item" onclick="window.PlynetSettings.openBlockedUsersModal()">
+            <span style="font-size:1.2rem;">🛡️</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:0.92rem;">Privacy & Blocked Users</div>
+              <div style="font-size:0.75rem;color:var(--text-tertiary);">Manage caller permissions & safety</div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div class="chat-thread-item" onclick="window.PlynetSettings.openAboutModal()">
+            <span style="font-size:1.2rem;">ℹ️</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:0.92rem;">About PLYNET</div>
+              <div style="font-size:0.75rem;color:var(--text-tertiary);">Version, license, community guidelines</div>
+            </div>
+            <span>›</span>
+          </div>
+
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text-tertiary);margin-top:10px;">ACCOUNT ACTIONS</div>
+
+          <button class="btn-secondary" onclick="window.PlynetAuth.logout(); window.PlynetApp.showToast('Logged out of PLYNET');">
+            🚪 Log Out
+          </button>
+
+          <button class="btn-secondary" style="color:var(--accent-pink);border-color:var(--accent-pink);" onclick="window.PlynetSettings.confirmDeleteAccount()">
+            ⚠️ Delete Account
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Calling Overlay (WebRTC Voice & Video Calling Screen) -->
+    <div class="calling-overlay" id="calling-overlay">
+      <!-- Video streams -->
+      <video id="remote-video" class="video-stage" autoplay playsinline style="display:none;"></video>
+      <video id="local-video" class="local-video-pip" autoplay playsinline muted style="display:none;"></video>
+
+      <div class="call-header">
+        <span class="call-badge-type" id="call-type-badge">PLYNET HD CALL</span>
+        <div class="call-timer" id="call-timer" style="display:none;">00:00</div>
+      </div>
+
+      <div class="call-center-info" id="call-center-info">
+        <div class="call-avatar-pulse">
+          <div class="pulse-ring"></div>
+          <div class="pulse-ring"></div>
+          <img id="call-avatar-img" class="call-avatar-img" src="" alt="Caller">
+        </div>
+        <div class="call-user-name" id="call-user-name">Member</div>
+        <div class="call-status-label" id="call-status-label">Calling...</div>
+      </div>
+
+      <div class="call-controls-row">
+        <button class="call-action-btn" id="btn-call-mute" title="Mute Microphone">🎤</button>
+        <button class="call-action-btn" id="btn-call-camera" title="Toggle Camera" style="display:none;">📹</button>
+        <button class="call-action-btn" id="btn-call-flip" title="Flip Camera" style="display:none;">🔄</button>
+        <button class="call-action-btn" id="btn-call-speaker" title="Toggle Speaker">📢</button>
+        <button class="call-action-btn end-call" id="btn-call-end" title="End Call">📞</button>
+      </div>
+    </div>
+
+    <!-- Incoming Call Banner Modal -->
+    <div class="incoming-call-modal" id="incoming-call-modal">
+      <div class="incoming-call-row">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <img id="incoming-caller-avatar" style="width:48px;height:48px;border-radius:999px;object-fit:cover;" src="" alt="Caller">
+          <div>
+            <div id="incoming-caller-name" style="font-weight:800;font-size:1rem;color:var(--text-primary);">Caller</div>
+            <div id="incoming-call-type" style="font-size:0.75rem;color:var(--primary-500);font-weight:600;">Incoming Call...</div>
+          </div>
+        </div>
+        <div class="call-actions-pair">
+          <button class="call-accept-btn" id="btn-incoming-accept" title="Accept">📞</button>
+          <button class="call-decline-btn" id="btn-incoming-decline" title="Decline">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Sheet Modal Container -->
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="bottom-sheet">
+        <div class="sheet-handle-bar"></div>
+        <div class="sheet-header">
+          <span class="sheet-title" id="sheet-title">PLYNET</span>
+          <button class="icon-btn" style="width:30px;height:30px;background:transparent;" onclick="window.PlynetApp.closeModal()">✕</button>
+        </div>
+        <div class="sheet-body" id="sheet-body"></div>
+      </div>
+    </div>
+
+    <!-- App Toast Notice -->
+    <div class="toast-notice" id="app-toast">Notification</div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav-bar">
+      <button class="nav-tab-btn active" data-screen="feed" aria-label="Home Feed">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </button>
+
+      <button class="nav-tab-btn" data-screen="search" aria-label="Search & Explore">
+        <span class="nav-icon">🔍</span>
+        <span class="nav-label">Explore</span>
+      </button>
+
+      <button class="nav-create-btn" data-screen="create" aria-label="Create Post">
+        +
+      </button>
+
+      <button class="nav-tab-btn" data-screen="messages" aria-label="Direct Messages">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Chats</span>
+      </button>
+
+      <button class="nav-tab-btn" data-screen="profile" aria-label="User Profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profile</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- JavaScript Modules in Dependency Order -->
+  <script src="js/firebase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ads.js"></script>
+  <script src="js/posts.js"></script>
+  <script src="js/feed.js"></script>
+  <script src="js/comments.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/messaging.js"></script>
+  <script src="js/calls.js"></script>
+  <script src="js/communities.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
